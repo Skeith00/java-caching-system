@@ -1,6 +1,6 @@
 package functional;
 
-import cache.exception.EmptyNodeRingFound;
+import cache.exception.EmptyNodeRing;
 import cache.exception.KeyNotFound;
 import cache.service.CacheManager;
 import cache.model.Node;
@@ -25,12 +25,12 @@ public class CacheManagerFunctionalTest {
         cacheManager = new CacheManager(nodeRingManager);
     }
 
-    @Test(expected = EmptyNodeRingFound.class)
+    @Test(expected = EmptyNodeRing.class)
     public void testCacheWhenRingEmpty() {
         cacheManager.cacheKey("key1", "value1");
     }
 
-    @Test(expected = EmptyNodeRingFound.class)
+    @Test(expected = EmptyNodeRing.class)
     public void testRetrieveWhenRingEmpty() {
         cacheManager.retrieveKey("key1");
     }
@@ -54,7 +54,7 @@ public class CacheManagerFunctionalTest {
         Assert.assertEquals("value3", cacheManager.retrieveKey("key3"));
     }
 
-    @Test(expected = EmptyNodeRingFound.class)
+    @Test(expected = EmptyNodeRing.class)
     public void testInvalidateWhenRingEmpty() {
         cacheManager.invalidateKey("key1");
     }

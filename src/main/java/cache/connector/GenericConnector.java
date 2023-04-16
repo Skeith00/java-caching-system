@@ -6,7 +6,6 @@ import cache.service.NodeRingManager;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Connector class.

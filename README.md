@@ -1,16 +1,32 @@
 # java-caching-system
-Java Caching System
+Java Distributed Cache Challenge
 
-CacheEntry class to represent the cacheManager entries
+This project implements a distributed caching mechanism using a consistent hashing algorithm for storing and retrieving data.
 
-CacheNode class to represent the cacheManager nodes. Each node will be responsible for a portion of the cacheManager entries, based on the hash value of the keys
+**Features**
 
-Cache class to manage the cacheManager nodes and distribute the cacheManager entries among them
+The system consists of the following components:
 
-You can use the Cache class to put and get values from the cacheManager
+**CacheManager and NodeManagers**
 
-In this example, we're using three cacheManager nodes, and the cacheManager entries are distributed among them based on the hash value of the keys. When we call get("key1"), for example, the getNode method calculates the hash value of the key and uses it to determine which cacheManager node is responsible for that key. The get method then retrieves the cacheManager entry from
+These services interact with the NodeRingManager. The CacheManager handles all key-value operations, while the NodeManager handles all node operations.
 
-https://medium.com/@sandeep4.verma/consistent-hashing-8eea3fb4a598
-https://web.archive.org/web/20221230083731/https:/michaelnielsen.org/blog/consistent-hashing/
-https://www.toptal.com/big-data/consistent-hashing
+**NodeEventHandler**
+
+This component interacts with the CacheManager to trigger node operations based on events. These events are simulated and used in the console menu as a means of interacting with the NodeEventHandler.
+
+**Connectors**
+
+The CacheConnectorFactory provides an interface to acquire different connectors based on the node type. The GenericConnector is the only connector with logic. The remaining connectors are just dummies that inherit from the GenericConnector. All cache entries reside within each of the connectors, simulating a realistic approach where all key-values would live in remote servers, and specific clients/connectors are used to interact with them.
+
+**Usage**
+
+To use the system, follow these steps:
+
+1. Open a terminal and navigate to the root directory of the project.
+2. Run the command `./gradlew build` to compile the Java classes, run the tests, and build the JAR under build/libs.
+Alternatively, you can run the command `./gradlew jar` to only compile the Java classes and build the JAR.
+3. Finally, run the command `java -jar build/libs/java-caching-system.jar` to start the system.
+
+Testing
+To test the system, run the command ./gradlew test. This will execute the unit tests included in the project.

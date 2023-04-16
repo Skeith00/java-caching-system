@@ -1,6 +1,6 @@
 package cache.service;
 
-import cache.exception.EmptyNodeRingFound;
+import cache.exception.EmptyNodeRing;
 import cache.exception.NodeNotFound;
 import cache.model.Node;
 import cache.model.VirtualNode;
@@ -79,7 +79,7 @@ public class NodeRingManager {
      */
     protected VirtualNode findClosestVirtualNodeByHash(int hash) {
         if (nodesCluster.isEmpty()) {
-            throw new EmptyNodeRingFound("Node Cluster is empty.");
+            throw new EmptyNodeRing("Node Cluster is empty.");
         }
         if (nodesCluster.containsKey(hash)) {
             return nodesCluster.get(hash);
@@ -98,7 +98,7 @@ public class NodeRingManager {
     // method added purely for Console Menu, option "Send a nodeShuttingDown event"
     public Node getRandomNode() {
         if (nodesCluster.isEmpty()) {
-            throw new EmptyNodeRingFound("Node Cluster is empty.");
+            throw new EmptyNodeRing("Node Cluster is empty.");
         }
         Integer key = nodesCluster.firstKey();
         return nodesCluster.get(key).getNode();
