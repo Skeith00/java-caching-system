@@ -1,14 +1,15 @@
 package cache.model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class VirtualNode {
     private final Node node;
-    private final List<String> keys = new ArrayList<>();
+    private final int hash;
 
-    public VirtualNode(Node node) {
+    private final Set<String> keys = new HashSet<>();
+
+    public VirtualNode(int hash, Node node) {
+        this.hash = hash;
         this.node = node;
     }
 
@@ -20,11 +21,18 @@ public class VirtualNode {
         keys.add(key);
     }
 
+    public void addKeys(Set<String> key) {
+        keys.addAll(key);
+    }
+
     public void removeKey(String key) {
         keys.remove(key);
     }
+    public void removeKeys() {
+        keys.clear();
+    }
 
-    public List<String> getKeys() {
+    public Set<String> getKeys() {
         return keys;
     }
 
@@ -38,5 +46,9 @@ public class VirtualNode {
 
     public Node getNode() {
         return node;
+    }
+
+    public int getVirtualNodeHash() {
+        return hash;
     }
 }

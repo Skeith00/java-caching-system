@@ -1,8 +1,6 @@
 package cache.connector;
 
-
-import cache.event.NodeEventHandler;
-import cache.event.NodeEventHandlerImpl;
+import cache.exception.KeyNotFound;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,11 +21,17 @@ public class GenericConnector implements CacheConnector {
 
     public String retrieve(String url, String key) {
         Map<String, String> cacheEntriesInNode = cacheEntriesPerNode.get(url);
+        if (cacheEntriesInNode == null || cacheEntriesInNode.get(key) == null) {
+            throw new KeyNotFound("Key " + key + " not found.");
+        }
         return cacheEntriesInNode.get(key);
     }
 
     public void invalidate(String url, String key) {
         Map<String, String> cacheEntriesInNode = cacheEntriesPerNode.get(url);
+        if (cacheEntriesInNode == null || cacheEntriesInNode.get(key) == null) {
+            throw new KeyNotFound("Key " + key + " not found.");
+        }
         cacheEntriesInNode.remove(key);
     }
 }

@@ -1,5 +1,6 @@
 package cache.connector;
 
+import cache.exception.NodeTypeNotFound;
 import cache.model.NodeType;
 
 public class CacheConnectorFactory {
@@ -10,7 +11,7 @@ public class CacheConnectorFactory {
 
     public static CacheConnector getConnector(NodeType type) {
         if (type == null) {
-            throw new RuntimeException("Invalid NodeType.");
+            throw new NodeTypeNotFound("Invalid NodeType.");
         }
         switch (type) {
             case REDIS:
@@ -20,7 +21,7 @@ public class CacheConnectorFactory {
             case HAZELCAST:
                 return HAZELCAST_CONNECTOR;
             default:
-                throw new RuntimeException(type + " connector not found");
+                throw new NodeTypeNotFound(type + " connector not found");
         }
     }
 }

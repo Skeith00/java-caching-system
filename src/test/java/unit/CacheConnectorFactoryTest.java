@@ -1,6 +1,7 @@
 package unit;
 
 import cache.connector.*;
+import cache.exception.NodeTypeNotFound;
 import cache.model.NodeType;
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,14 +30,10 @@ public class CacheConnectorFactoryTest {
         Assert.assertTrue(result instanceof RedisConnector);
     }
 
-    @Test
+    @Test(expected = NodeTypeNotFound.class)
     public void testInvalidConnector() {
         // Test getting an invalid connector
-        try {
-            CacheConnectorFactory.getConnector(null);
-            Assert.fail("Expected an Exception to be thrown");
-        } catch (Exception e) {
-            Assert.assertEquals("Invalid NodeType.", e.getMessage());
-        }
+        CacheConnectorFactory.getConnector(null);
+        Assert.fail("Expected an Exception to be thrown");
     }
 }

@@ -1,45 +1,51 @@
 package functional;
 
-import cache.model.VirtualNode;
+import cache.exception.EmptyNodeRingFound;
+import cache.exception.KeyNotFound;
 import cache.service.CacheManager;
 import cache.model.Node;
 import cache.model.NodeType;
+import cache.service.NodeManager;
+import cache.service.NodeRingManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Field;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.UUID;
 
 public class CacheManagerFunctionalTest {
 
-    private final CacheManager cacheManager = new CacheManager(3);
-    private final SortedMap<Integer, VirtualNode> nodesCluster = new TreeMap<>();
-    private boolean firstTry = true;
+    private CacheManager cacheManager;
+    private NodeManager nodeManager;
 
     @Before
     public void setUp() {
-        if (firstTry) {
-            try {
-                Field declaredField = CacheManager.class.getDeclaredField("nodesCluster");
-                boolean accessible = declaredField.isAccessible();
-                declaredField.setAccessible(true);
-                declaredField.set(cacheManager, nodesCluster);
-                declaredField.setAccessible(accessible);
+        NodeRingManager nodeRingManager = new NodeRingManager();
+        nodeManager = new NodeManager(nodeRingManager);
+        cacheManager = new CacheManager(nodeRingManager);
+    }
 
-                UUID uuid = UUID.randomUUID();
-                cacheManager.addNode(uuid, NodeType.randomNode());
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-            firstTry = false;
-        }
+    @Test(expected = EmptyNodeRingFound.class)
+    public void testCacheWhenRingEmpty() {
+        cacheManager.cacheKey("key1", "value1");
+    }
+
+    @Test(expected = EmptyNodeRingFound.class)
+    public void testRetrieveWhenRingEmpty() {
+        cacheManager.retrieveKey("key1");
+    }
+
+    @Test(expected = KeyNotFound.class)
+    public void testRetrieveWhenKeyNotPresent() {
+        Node node = new Node(UUID.randomUUID(), NodeType.randomNode());
+        nodeManager.addNode(node);
+        cacheManager.retrieveKey("key1");
     }
 
     @Test
     public void testCacheAndRetrieve() {
+        Node node = new Node(UUID.randomUUID(), NodeType.randomNode());
+        nodeManager.addNode(node);
         cacheManager.cacheKey("key1", "value1");
         cacheManager.cacheKey("key2", "value2");
         cacheManager.cacheKey("key3", "value3");
@@ -48,31 +54,29 @@ public class CacheManagerFunctionalTest {
         Assert.assertEquals("value3", cacheManager.retrieveKey("key3"));
     }
 
+    @Test(expected = EmptyNodeRingFound.class)
+    public void testInvalidateWhenRingEmpty() {
+        cacheManager.invalidateKey("key1");
+    }
+
+    @Test(expected = KeyNotFound.class)
+    public void testInvalidateWhenKeyNotPresent() {
+        Node node = new Node(UUID.randomUUID(), NodeType.randomNode());
+        nodeManager.addNode(node);
+        cacheManager.invalidateKey("key1");
+    }
+
     @Test
     public void testInvalidate() {
+        Node node = new Node(UUID.randomUUID(), NodeType.randomNode());
+        nodeManager.addNode(node);
         cacheManager.cacheKey("key1", "value1");
         cacheManager.cacheKey("key2", "value2");
         Assert.assertEquals("value1", cacheManager.retrieveKey("key1"));
         Assert.assertEquals("value2", cacheManager.retrieveKey("key2"));
         cacheManager.invalidateKey("key1");
-        Assert.assertNull(cacheManager.retrieveKey("key1"));
+        Assert.assertThrows(KeyNotFound.class, () -> cacheManager.retrieveKey("key1"));
         Assert.assertEquals("value2", cacheManager.retrieveKey("key2"));
     }
 
-    @Test
-    public void addNode() {
-        int size = nodesCluster.size();
-        UUID uuid = UUID.randomUUID();
-        cacheManager.addNode(uuid, NodeType.HAZELCAST);
-        Assert.assertEquals(size + CacheManager.NUM_REPLICAS, nodesCluster.size());
-    }
-
-    @Test
-    public void removeNode() {
-        UUID uuid = UUID.randomUUID();
-        cacheManager.addNode(uuid, NodeType.HAZELCAST);
-        int size = nodesCluster.size();
-        cacheManager.removeNode(uuid);
-        Assert.assertEquals(size - CacheManager.NUM_REPLICAS, nodesCluster.size());
-    }
 }

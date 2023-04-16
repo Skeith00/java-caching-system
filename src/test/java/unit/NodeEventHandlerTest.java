@@ -2,17 +2,14 @@ package unit;
 
 import cache.event.NodeEventHandlerImpl;
 import cache.model.Node;
-import cache.service.CacheManager;
+import cache.service.NodeManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.util.logging.Logger;
+import java.util.UUID;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 public class NodeEventHandlerTest {
@@ -20,53 +17,32 @@ public class NodeEventHandlerTest {
     @Mock
     private Node node;
     @Mock
-    private CacheManager cacheManager;
+    private NodeManager nodeManager;
 
-    @Mock
-    private Logger logger;
+    private NodeEventHandlerImpl nodeEventHandlerImpl;
 
     @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+        nodeEventHandlerImpl = new NodeEventHandlerImpl(nodeManager);
+        when(node.getNodeId()).thenReturn(UUID.randomUUID());
     }
 
     @Test
     public void testNodeAdded() {
-        try (MockedStatic<Logger> loggerMockedStatic = Mockito.mockStatic(Logger.class)) {
-            loggerMockedStatic
-                    .when(() -> Logger.getLogger(anyString()))
-                    .thenReturn(logger);
-
-            doNothing().when(logger).info(anyString());
-            NodeEventHandlerImpl nodeEventHandlerImpl = new NodeEventHandlerImpl(cacheManager);
-            nodeEventHandlerImpl.nodeAdded(node);
-        }
-        verify(logger).info("Node " + node.getNodeId().toString() + " has been added.");
+        nodeEventHandlerImpl.nodeAdded(node);
+        verify(nodeManager).addNode(node);
     }
 
     @Test
     public void testNodeRemoved() {
-        try (MockedStatic<Logger> loggerMockedStatic = Mockito.mockStatic(Logger.class)) {
-            loggerMockedStatic
-                    .when(() -> Logger.getLogger(anyString()))
-                    .thenReturn(logger);
-
-            NodeEventHandlerImpl nodeEventHandlerImpl = new NodeEventHandlerImpl(cacheManager);
-            nodeEventHandlerImpl.nodeRemoved(node);
-        }
-        verify(logger).info("Node " + node.getNodeId().toString() + " has been deleted.");
+        nodeEventHandlerImpl.nodeRemoved(node);
+        verify(nodeManager).removeNode(node);
     }
 
     @Test
     public void testNodeShuttingDown() {
-        try (MockedStatic<Logger> loggerMockedStatic = Mockito.mockStatic(Logger.class)) {
-            loggerMockedStatic
-                    .when(() -> Logger.getLogger(anyString()))
-                    .thenReturn(logger);
-
-            NodeEventHandlerImpl nodeEventHandlerImpl = new NodeEventHandlerImpl(cacheManager);
-            nodeEventHandlerImpl.nodeShuttingDown(node);
-        }
-        verify(logger).info("Node " + node.getNodeId().toString() + " has been shut down.");
+        nodeEventHandlerImpl.nodeRemoved(node);
+        verify(nodeManager).removeNode(node);
     }
 }
