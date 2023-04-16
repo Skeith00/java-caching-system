@@ -1,13 +1,8 @@
 package cache.event;
 
 import cache.model.Node;
-import cache.model.VirtualNode;
-import cache.service.CacheManager;
 import cache.service.NodeManager;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.SortedMap;
 import java.util.logging.Logger;
 
 public class NodeEventHandlerImpl implements NodeEventHandler {

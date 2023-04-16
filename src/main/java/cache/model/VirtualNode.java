@@ -2,6 +2,10 @@ package cache.model;
 
 import java.util.*;
 
+/**
+ * Virtual Node or Replica.
+ * This class is used to represent different units of the same Node in the hash ring.
+ */
 public class VirtualNode {
     private final Node node;
     private final int hash;
@@ -28,8 +32,9 @@ public class VirtualNode {
     public void removeKey(String key) {
         keys.remove(key);
     }
-    public void removeKeys() {
-        keys.clear();
+
+    public void removeKeys(Set<String> key) {
+        keys.removeAll(key);
     }
 
     public Set<String> getKeys() {

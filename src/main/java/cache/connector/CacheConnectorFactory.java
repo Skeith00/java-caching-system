@@ -5,10 +5,17 @@ import cache.model.NodeType;
 
 public class CacheConnectorFactory {
 
+    private CacheConnectorFactory() {}
+
     private static final HazelcastConnector HAZELCAST_CONNECTOR = new HazelcastConnector();
     private static final MemcacheConnector MEMCACHE_CONNECTOR = new MemcacheConnector();
     private static final RedisConnector REDIS_CONNECTOR = new RedisConnector();
 
+    /**
+     * Factory class to retrieve the correct connector for the provided NodeType
+     * @param type
+     * @return
+     */
     public static CacheConnector getConnector(NodeType type) {
         if (type == null) {
             throw new NodeTypeNotFound("Invalid NodeType.");

@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
+import java.util.Random;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.UUID;
@@ -70,8 +71,10 @@ public class NodeManagerFunctionalTest {
 
     @Test
     public void testKeyTransfersWhenRemoving() {
-        Node node1 = new Node(UUID.randomUUID(), NodeType.randomNode());
-        Node node2 = new Node(UUID.randomUUID(), NodeType.randomNode());
+        UUID uuid1 = UUID.fromString("123e4567-e89b-42d3-a456-556642440000");
+        UUID uuid2 = UUID.fromString("123e4569-e89b-42d3-a556-556742440000");
+        Node node1 = new Node(uuid1, "http://redis", 6379, NodeType.REDIS);
+        Node node2 = new Node(uuid2, "http://hazelcast", 54327, NodeType.HAZELCAST);
         nodeManager.addNode(node1);
         cacheManager.cacheKey("key1", "value1");
         cacheManager.cacheKey("key2", "value2");
@@ -82,4 +85,5 @@ public class NodeManagerFunctionalTest {
         Assert.assertEquals("value1", cacheManager.retrieveKey("key1"));
         Assert.assertEquals("value2", cacheManager.retrieveKey("key2"));
     }
+
 }

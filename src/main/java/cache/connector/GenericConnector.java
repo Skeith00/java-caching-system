@@ -1,12 +1,25 @@
 package cache.connector;
 
 import cache.exception.KeyNotFound;
+import cache.model.Node;
+import cache.service.NodeRingManager;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
+/**
+ * Connector class.
+ *
+ * The reas
+ */
 public class GenericConnector implements CacheConnector {
 
+    /**
+     * All the entries have been kept in the connector to fit into a real world scenario
+     * where all the values would be living in a remote server, not in our system,
+     * and these values would be fetched through a client/connector.
+     */
     private final Map<String, Map<String, String>> cacheEntriesPerNode = new HashMap<>();
 
     public void cache(String url, String key, String value) {

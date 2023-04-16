@@ -6,10 +6,10 @@ public class HashUtils {
     private HashUtils() {
     }
 
-    // 360 representing the number of degrees in a ring
-    public static final int MOD = 360;
+    // Modulus number used in our hash function
+    public static final int MOD = 1080;
     public static int generateHash(String key) {
-        int hash = key.hashCode();
+        int hash = key.hashCode() & Integer.MAX_VALUE;
         return hash % MOD;
     }
 

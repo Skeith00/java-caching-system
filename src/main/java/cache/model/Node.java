@@ -19,7 +19,7 @@ public class Node {
     public Node(UUID nodeId, NodeType type) {
         this.nodeId = nodeId;
         this.hostname = "http://localhost";
-        this.port = new Random().nextInt(Integer.MAX_VALUE); ;
+        this.port = new Random().nextInt(Integer.MAX_VALUE);
         this.type = type;
     }
 
