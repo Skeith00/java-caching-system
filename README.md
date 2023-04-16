@@ -24,8 +24,8 @@ The CacheConnectorFactory provides an interface to acquire different connectors 
 To use the system, follow these steps:
 
 1. Open a terminal and navigate to the root directory of the project.
-2. Run the command `./gradlew build` to compile the Java classes, run the tests, and build the JAR under build/libs.
-Alternatively, you can run the command `./gradlew jar` to only compile the Java classes and build the JAR.
+2.  Run the command `./gradlew build` to compile the Java classes, run the tests, and build the JAR under build/libs.  (`chmod +x gradlew` needed for Unix systems)
+2. Alternatively, you can run the command `./gradlew jar` to only compile the Java classes and build the JAR.
 3. Finally, run the command `java -jar build/libs/java-caching-system.jar` to start the system.
 
 Testing
