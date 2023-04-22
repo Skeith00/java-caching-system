@@ -3,10 +3,8 @@ package cache.service;
 import cache.connector.CacheConnector;
 import cache.connector.CacheConnectorFactory;
 import cache.model.VirtualNode;
-import cache.utils.HashUtils;
 
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 public class CacheManager {
 
